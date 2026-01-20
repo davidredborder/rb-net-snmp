@@ -613,8 +613,8 @@ MFLAGS=
 MAKEFLAGS=
 
 # Identity of this package.
-PACKAGE_NAME='Net-SNMP'
-PACKAGE_TARNAME='net-snmp'
+PACKAGE_NAME='rb-net-snmp'
+PACKAGE_TARNAME='rb-net-snmp'
 PACKAGE_VERSION='5.9.5.2'
 PACKAGE_STRING='Net-SNMP 5.9.5.2'
 PACKAGE_BUGREPORT='net-snmp-coders@lists.sourceforge.net'
@@ -38796,7 +38796,7 @@ ac_config_files="$ac_config_files net-snmp-config:net-snmp-config.in"
 
 ac_config_files="$ac_config_files net-snmp-create-v3-user:net-snmp-create-v3-user.in"
 
-ac_config_files="$ac_config_files netsnmp.pc:netsnmp.pc.in netsnmp-agent.pc:netsnmp-agent.pc.in"
+ac_config_files="$ac_config_files rb-net-snmp.pc:netsnmp.pc.in rb-net-snmp-agent.pc:netsnmp-agent.pc.in"
 
 ac_config_files="$ac_config_files dist/generation-scripts/gen-variables:dist/generation-scripts/gen-variables.in"
 
@@ -39886,8 +39886,8 @@ do
     "mibs/Makefile") CONFIG_FILES="$CONFIG_FILES mibs/Makefile:Makefile.top:mibs/Makefile.in:Makefile.rules" ;;
     "net-snmp-config") CONFIG_FILES="$CONFIG_FILES net-snmp-config:net-snmp-config.in" ;;
     "net-snmp-create-v3-user") CONFIG_FILES="$CONFIG_FILES net-snmp-create-v3-user:net-snmp-create-v3-user.in" ;;
-    "netsnmp.pc") CONFIG_FILES="$CONFIG_FILES netsnmp.pc:netsnmp.pc.in" ;;
-    "netsnmp-agent.pc") CONFIG_FILES="$CONFIG_FILES netsnmp-agent.pc:netsnmp-agent.pc.in" ;;
+    "rb-net-snmp.pc") CONFIG_FILES="$CONFIG_FILES rb-net-snmp.pc:netsnmp.pc.in" ;;
+    "rb-net-snmp-agent.pc") CONFIG_FILES="$CONFIG_FILES rb-net-snmp-agent.pc:netsnmp-agent.pc.in" ;;
     "dist/generation-scripts/gen-variables") CONFIG_FILES="$CONFIG_FILES dist/generation-scripts/gen-variables:dist/generation-scripts/gen-variables.in" ;;
     "local/snmpconf") CONFIG_FILES="$CONFIG_FILES local/snmpconf" ;;
     "default") CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;

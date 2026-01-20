@@ -36,7 +36,7 @@
 %define netsnmp_include_perl 1
 %endif
 Summary: Tools and services for the SNMP protocol
-Name: net-snmp
+Name: rb-net-snmp
 Version: 5.9.5.2
 # update release for vendor release. (eg 1.fc6, 1.rh72, 1.ydl3, 1.ydl23)
 Release: 1
@@ -44,8 +44,7 @@ URL: http://www.net-snmp.org/
 License: BSDish
 Group: System Environment/Daemons
 Vendor: Net-SNMP project
-Source: net-snmp-%{version}.tar.gz
-Obsoletes: cmu-snmp ucd-snmp ucd-snmp-utils
+Source: rb-net-snmp-%{version}.tar.gz
 BuildRoot: /tmp/%{name}-root
 Packager: The Net-SNMP Coders <http://sourceforge.net/projects/net-snmp/>
 Requires: openssl, popt, rpm, zlib, bzip2-libs, glibc
@@ -64,14 +63,10 @@ BuildRequires: perl(ExtUtils::Embed)
 
 %if 0%{?fedora}%{?rhel}
 # Fedora & RHEL specific requires/provides
-Provides: net-snmp-libs, net-snmp-utils
-Obsoletes: net-snmp-libs, net-snmp-utils
 Epoch: 2
 
 # RHEL or Fedora
 %if 0%{?fedora} >= 9
-Provides: net-snmp-gui
-Obsoletes: net-snmp-gui
 # newer fedoras need following macro to compile with new rpm
 %define netsnmp_cflags "-D_RPM_4_4_COMPAT"
 %else
@@ -96,8 +91,7 @@ This package includes embedded Perl support within the agent.
 Group: Development/Libraries
 Summary: The includes and static libraries from the Net-SNMP package.
 AutoReqProv: no
-Requires: net-snmp = %{?%{epoch}:%{epoch}\:}%{version}
-Obsoletes: cmu-snmp-devel ucd-snmp-devel
+Requires: rb-net-snmp = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description devel
 The net-snmp-devel package contains headers and libraries which are
@@ -108,17 +102,15 @@ useful for building SNMP applications, agents, and sub-agents.
 Group: System Environment/Libraries
 Summary: The Perl modules provided with Net-SNMP
 AutoReqProv: no
-Requires: net-snmp = %{?%{epoch}:%{epoch}\:}%{version}, perl
+Requires: rb-net-snmp = %{?epoch:%{epoch}:}%{version}-%{release}, perl
 
 %if 0%{?fedora}%{?rhel}
-Provides: net-snmp-perl
 Provides: perl(SNMP) perl(NetSNMP::OID)
 Provides: perl(NetSNMP::ASN)
 Provides: perl(NetSNMP::AnyData::Format::SNMP) perl(NetSNMP::AnyData::Storage::SNMP)
 Provides: perl(NetSNMP::agent)
 Provides: perl(NetSNMP::manager) perl(NetSNMP::TrapReceiver)
 Provides: perl(NetSNMP::default_store) perl(NetSNMP::agent::default_store)
-Obsoletes: net-snmp-perl
 %endif
 
 %description perlmods
@@ -168,10 +160,12 @@ make DESTDIR=%{buildroot} install
 # Remove 'snmpinform' from the temporary directory because it is a
 # symbolic link, which cannot be handled by the rpm installation process.
 %__rm -f $RPM_BUILD_ROOT%{_prefix}/bin/snmpinform
-# install the init script
-mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
-perl -i -p -e 's@/usr/local/share/snmp/@/etc/snmp/@g;s@usr/local@%{_prefix}@g' dist/snmpd-init.d
-install -m 755 dist/snmpd-init.d $RPM_BUILD_ROOT/etc/rc.d/init.d/snmpd
+
+# Install systemd service
+mkdir -p $RPM_BUILD_ROOT%{_unitdir}
+install -m 644 dist/snmpd.service $RPM_BUILD_ROOT%{_unitdir}/rb-snmpd.service
+# Update binary path in service file
+sed -i 's|/usr/sbin/snmpd|%{_sbindir}/snmpd|g' $RPM_BUILD_ROOT%{_unitdir}/rb-snmpd.service
 
 %if 0%{?netsnmp_include_perl}
 # unneeded Perl stuff
@@ -227,8 +221,8 @@ rm -rf $RPM_BUILD_ROOT
 # % {_datadir}/snmp/snmpconf-data
 %{_datadir}/snmp
 
-%{_bindir}
-%{_sbindir}
+%{_bindir}/*
+%{_sbindir}/*
 %{_mandir}/man1/*
 # don't include Perl man pages, which start with caps
 %{_mandir}/man3/[^A-Z]*
@@ -236,7 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/*
 %{_libdir}/*.so*
 %{_libdir}/pkgconfig/*.pc
-/etc/rc.d/init.d/snmpd
+%{_unitdir}/rb-snmpd.service
 
 %files devel
 %defattr(-,root,root)
